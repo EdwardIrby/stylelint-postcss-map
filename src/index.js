@@ -9,13 +9,13 @@ const messages = stylelint.utils.ruleMessages(ruleName, {
 
 const defaultExceptions = [ 'calc', 'color'];
 
-const checkExceptions = (value, userExceptions) => {
-  const exceptions = defaultExceptions.concat(userExceptions);
+const checkExceptions = (prop, value, options) => {
+  const exceptions = options.hasOwnProperty(prop) ? defaultExceptions.concat(options[prop]) : defaultExceptions;
   return exceptions.includes(value);
 };
 
-const checkValue = (value, userExceptions) => {
-  if(checkExceptions(value,  userExceptions)) return true;
+const checkValue = (prop, value, options) => {
+  if(checkExceptions(prop, value,  options)) return true;
   const regEx = /^(map)/g;
   return regEx.test(value);
 }
@@ -23,11 +23,12 @@ const checkValue = (value, userExceptions) => {
 const checkProp = (prop, primaryOptions) => primaryOptions.includes(prop)
 
 const rule = stylelint.createPlugin(ruleName, function(primaryOptions, secondaryOptionObject){
+  secondaryOptionObject = secondaryOptionObject || { };
   return (postcssRoot, postcssResult) =>{
     const validOptions = stylelint.utils.validateOptions(postcssResult, ruleName, { primaryOptions, secondaryOptionObject })
     if(!validOptions) return;
     postcssRoot.walk(function(statement){
-      if(checkProp(statement.prop, primaryOptions) && !checkValue(statement.value, secondaryOptionObject.except)){
+      if(checkProp(statement.prop, primaryOptions) && !checkValue(statement.prop, statement.value, secondaryOptionObject)){
         stylelint.utils.report({
           ruleName: ruleName,
           result: postcssResult,
