@@ -5,11 +5,9 @@
   "main": "lib/index.js",
   "scripts": {
     "compile": "babel -d lib/ src/",
-    "pretest": "babel test/index.babel.js --out-file test/index.js; npm run compile",
-    "test": "tape test/index.js",
-    "prepublish": "npm run compile",
-    "preparse": "npm run compile",
-    "parse": "node lib/index.js"
+    "pretest": "npm run compile",
+    "test": "babel-tape-runner test/index.js",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
@@ -31,10 +29,9 @@
     "babel-cli": "^6.14.0",
     "babel-preset-es2015": "^6.14.0",
     "babel-tape-runner": "^2.0.1",
-    "tape": "^4.6.0"
+    "stylelint-rule-tester": "^0.6.2"
   },
   "dependencies": {
-    "stylelint": "^7.2.0",
-    "stylelint-test-rule-tape": "^0.2.0"
+    "stylelint": "^7.2.0"
   }
 }

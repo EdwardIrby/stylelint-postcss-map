@@ -1,40 +1,50 @@
-'use strict';
+import ruleTester from 'stylelint-rule-tester';
+import declarationUseVariable, { messages, ruleName } from '../lib';
 
-var _stylelintRuleTester = require('stylelint-rule-tester');
+const testRule = ruleTester(declarationUseVariable.rule, ruleName);
 
-var _stylelintRuleTester2 = _interopRequireDefault(_stylelintRuleTester);
-
-var _lib = require('../lib');
-
-var _lib2 = _interopRequireDefault(_lib);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var testRule = (0, _stylelintRuleTester2.default)(_lib2.default.rule, _lib.ruleName);
-
-//Test for secondaryOptionObject exceptions
-testRule(['color', 'width', 'z-index'], { color: ['trasnparent'],
-  width: ['100%', '100vw'],
-  'z-index': ['1']
-}, function (tr) {
+//Test Single CSS Property
+testRule('color',
+function(tr){
   tr.ok('.foo { color: map(colors, blue) }');
-  tr.ok('.foo { color: trasnparent}');
-  tr.ok('.foo { display: block }');
-  tr.ok('.foo { width: 100% }');
+  tr.ok('.foo { background-color: blue }');
+  tr.notOk('.foo { color: blue}', messages.expected('color'));
+})
+
+//Test Multiple CSS Properites
+testRule(['color', 'width'],
+function(tr){
+  tr.ok('.foo { color: map(colors, blue) }');
+  tr.ok('.foo { background-color: blue }');
+  tr.ok('.foo { width: map(layout, appWidth)}');
+  tr.ok('.foo { height: map(layout, panelHeight)}');
+  tr.notOk('.foo { color: blue}', messages.expected('color'));
+  tr.notOk('.foo { width: 200px}', messages.expected('width'));
+})
+
+//Test Single CSS Property with Exception
+testRule('color', {color:"transparent"},
+function(tr){
+  tr.ok('.foo { color: map(colors, blue) }');
+  tr.ok('.foo { color: transparent}');
+  tr.ok('.foo { background-color: blue}');
+  tr.notOk('.foo { color: red}', messages.expected('color'));
+})
+
+//Test Multiple CSS Properites with exceptions
+testRule(['color', 'width', 'z-index'],
+{
+  "color": ["transparent"],
+  "width": ["100%", "100vw"]
+},
+function(tr){
+  tr.ok('.foo { color: map(colors, blue) }');
+  tr.ok('.foo { color: transparent }');
+  tr.ok('.foo { width: map(layout, appWidth)}');
+  tr.ok('.foo { width: 100%}');
   tr.ok('.foo { width: 100vw}');
   tr.ok('.foo { z-index: map(zIndex, z1)}');
-  tr.ok('.foo { z=index: 1}');
-  tr.notOk('.foo { width:200px }', _lib.messages.expected('width'));
-  tr.notOk('.foo { z-index: 2}', _lib.messages.expected('z-index'));
-  tr.notOk('.foo { color: red}', _lib.messages.expected('color'));
-});
-
-//Test for just primaryOptions
-testRule(['color', 'width', 'z-index'], function (tr) {
-  tr.ok('.foo { color: map(colors, blue) }');
-  tr.ok('.foo { width: map(layout, appWidth)}');
-  tr.ok('.foo { z-index: map(zIndex, z1)}');
-  tr.notOk('.foo { width:200px }', _lib.messages.expected('width'));
-  tr.notOk('.foo { z-index: 1}', _lib.messages.expected('z-index'));
-  tr.notOk('.foo { color: red}', _lib.messages.expected('color'));
-});
+  tr.notOk('.foo { color: blue}', messages.expected('color'));
+  tr.notOk('.foo { width: 200px}', messages.expected('width'));
+  tr.notOk('.foo { z-index: 1}', messages.expected('z-index'));
+})
