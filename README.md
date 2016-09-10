@@ -1,6 +1,6 @@
 # stylelint-postcss-map
 ---
-This Stylelint plugin checks for the use of [postcss-map](https://github.com/pascalduez/postcss-map) variables in your css. It was inspired by [stylelint-declaration-use-variable](https://github.com/sh-waqar/stylelint-declaration-use-variable).
+This Stylelint plugin checks for the use of [postcss-map](https://github.com/pascalduez/postcss-map) variables in your css. It's a fork of [stylelint-declaration-use-variable](https://github.com/sh-waqar/stylelint-declaration-use-variable).
 
 ## Installation
 ---

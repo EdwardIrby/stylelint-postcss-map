@@ -48,3 +48,14 @@ function(tr){
   tr.notOk('.foo { width: 200px}', messages.expected('width'));
   tr.notOk('.foo { z-index: 1}', messages.expected('z-index'));
 })
+
+//Test Default exceptions
+testRule(['color', 'width'],
+function(tr){
+  tr.ok('.foo { color: map(colors, blue) }');
+  tr.ok('.foo { color: color( red a(90%)) }');
+  tr.ok('.foo { width: map(layout, appWidth) }');
+  tr.ok('.foo { width: calc(2px + 2px) }');
+  tr.notOk('.foo { color: blue}', messages.expected('color'));
+  tr.notOk('.foo { width: 200px}', messages.expected('width'));
+})

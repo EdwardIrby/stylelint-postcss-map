@@ -1,22 +1,20 @@
 import stylelint from 'stylelint';
-
 import  './includes.js';
+
 const ruleName = 'plugin/stylelint-postcss-map';
 
 const messages = stylelint.utils.ruleMessages(ruleName, {
   expected: (property) => `Expected variable for ${property}`,
 })
 
-const defaultExceptions = [ 'calc', 'color'];
-
 const checkExceptions = (prop, value, options) => {
-  const exceptions = options.hasOwnProperty(prop) ? defaultExceptions.concat(options[prop]) : defaultExceptions;
+  const exceptions = options.hasOwnProperty(prop) ? options[prop] : [];
   return exceptions.includes(value);
 };
 
 const checkValue = (prop, value, options) => {
   if(checkExceptions(prop, value,  options)) return true;
-  const regEx = /^(map)/g;
+  const regEx = /(map)|(calc\()|color(\()/g;
   return regEx.test(value);
 }
 
