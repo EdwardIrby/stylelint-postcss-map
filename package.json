@@ -1,6 +1,6 @@
 {
   "name": "stylelint-postcss-map",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A stylelint custom rule to check the use of postcss-map variables on declarations",
   "main": "lib/index.js",
   "scripts": {
